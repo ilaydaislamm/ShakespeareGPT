@@ -50,12 +50,12 @@ class CharacterTokenizer:
 
         return "".join(text)
 
-
-def load_data(data_url : str,
-              file_path : str,
-              train_split: float = 0.9):
-    download_file(data_url)
-    with open(file_path,"r") as file:
+#TRAIN-TEST-SPLIT
+def load_data(
+              train_split: float = 0.9
+):
+    download_file(SHAKESPEARE_URL)
+    with open("data/shakespeare","r") as file:
         text = file.read()
 
     tokenizer = CharacterTokenizer(text)
@@ -69,6 +69,8 @@ def load_data(data_url : str,
     test_data = data[train_split:]
 
     return train_data,test_data,tokenizer
+
+#DIVIDE DATA TO X AND Y
 
 def get_batch(data : torch.Tensor,
               block_size : int = 256,

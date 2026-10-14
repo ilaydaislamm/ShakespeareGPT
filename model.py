@@ -36,7 +36,6 @@ class TransformerBlock(nn.Module):
                                                    key = x_norm,
                                                    value = x_norm,
                                                     attn_mask = casual_mask,
-                                                    is_casual = False,
                                                    need_weights = False)
 
         x = x + attn_output
@@ -85,7 +84,7 @@ class GPT(nn.Module):
 
         self.register_buffer('casual_mask', casual_mask)
 
-        self.apply(self.init_weights)
+        self.apply(self._init_weights)
 
 
     def _init_weights(self,module):
@@ -131,11 +130,11 @@ class GPT(nn.Module):
         return logits
 
 
-
+    #GENERATES NEXT TOKEN ID
     def generate(self,input_ids : torch.Tensor,max_new_tokens : int,temperature : float = 0.5):
         for _ in range(max_new_tokens):
 
-            if input_ids.shape[1] <= max_new_tokens:
+            if input_ids.shape[1] <= self.block_size:
                 current_input = input_ids
             else:
                 current_input = input_ids[:,-self.block_size:]
